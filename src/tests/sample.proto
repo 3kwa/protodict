@@ -48,3 +48,11 @@ message NestedExtension {
         optional MessageOfTypes.NestedType extNested = 103;
     }
 }
+
+message MessageOneRequired {
+    required MessageOneOptional req = 1;
+}
+
+message MessageOneOptional {
+    optional string opt = 1;
+}

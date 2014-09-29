@@ -1,9 +1,13 @@
-import unittest
-from tests.sample_pb2 import MessageOfTypes, extDouble, extString, NestedExtension
-from protobuf_to_dict import protobuf_to_dict, dict_to_protobuf
 import base64
-import nose.tools
 import json
+import unittest
+
+from google.protobuf.message import EncodeError
+import nose.tools
+
+from tests.sample_pb2 import MessageOfTypes, extDouble, extString, \
+                             NestedExtension, MessageOneRequired, MessageOneOptional
+from protobuf_to_dict import protobuf_to_dict, dict_to_protobuf
 
 
 class Test(unittest.TestCase):
@@ -151,3 +155,23 @@ class Test(unittest.TestCase):
         for key, value in primitives.items():
             assert deser.Extensions[key] == m.Extensions[key]
         assert deser.Extensions[NestedExtension.extNested].req == m.Extensions[NestedExtension.extNested].req
+
+
+class TestRequiredOfOptional(unittest.TestCase):
+
+    def setUp(self):
+        opt = MessageOneOptional()
+        self.message = MessageOneRequired()
+        self.message.req.MergeFrom(opt)
+
+    def test_to_dict(self):
+        d = protobuf_to_dict(self.message)
+        assert d['req'] == {}
+
+    def test_to_pb(self):
+        d = {'req': {}}
+        pb = dict_to_protobuf(MessageOneRequired, d)
+        try:
+            pb.SerializeToString()
+        except EncodeError as e:
+            self.fail('{0}'.format(e.message))

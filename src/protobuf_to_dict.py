@@ -86,7 +86,7 @@ def dict_to_protobuf(pb_klass_or_instance, values, type_callable_map=REVERSE_TYP
 
     :param pb_klass_or_instance: a protobuf message class, or an protobuf instance
     :type pb_klass_or_instance: a type or instance of a subclass of google.protobuf.message.Message
-    :param dict values: a dictionary of values. Repeated and nested values are 
+    :param dict values: a dictionary of values. Repeated and nested values are
        fully supported.
     :param dict type_callable_map: a mapping of protobuf types to callables for setting
        values on the target instance.
@@ -142,7 +142,11 @@ def _dict_to_protobuf(pb, value, type_callable_map, strict):
                     pb_value.append(item)
             continue
         if field.type == FieldDescriptor.TYPE_MESSAGE:
-            _dict_to_protobuf(pb_value, input_value, type_callable_map, strict)
+            if input_value:
+                _dict_to_protobuf(pb_value, input_value, type_callable_map, strict)
+            else:
+                m = type(pb_value)()
+                getattr(pb, field.name).MergeFrom(m)
             continue
 
         if field.type in type_callable_map:
