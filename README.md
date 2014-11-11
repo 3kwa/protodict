@@ -1,23 +1,26 @@
-# protobuf-to-dict
+# protodict
 
-protobuf-to-dict is a small Python library for creating dicts from protocol
-buffers. It is intended to be used as an intermediate step before
-serialization (e.g. to JSON).
+Is a fork of protobuf-to-dict (created by [Ben Hodgson](http://benhodgson.com/)),
+stewarded by [Eugene Van den Bulke](http://github.com/3kwa) as Ben does not appear
+to dedicate much time to it anymore.
+
+protodict is a small Python library for 2 ways conversion between dicts
+and protocol buffers.
 
 ## Installation
 
-Use `pip install protobuf-to-dict` or `python setup.py install`.
+Use `pip install protodict` or `python setup.py install`.
 
 ## Example
 
 Given the `google.protobuf.message.Message` subclass `MyMessage`:
 
 ```python
->>> from protobuf_to_dict import protobuf_to_dict
+>>> import protodict
 >>> my_message = MyMessage()
 >>> # pb_my_message is a protobuf string
 >>> my_message.ParseFromString(pb_my_message)
->>> protobuf_to_dict(my_message)
+>>> protodict.to_dict(my_message)
 {'message': 'Hello'}
 ```
 
@@ -36,21 +39,21 @@ If you want to override this behaviour, you may do so by passing
 ```python
 >>> from copy import copy
 >>> from google.protobuf.descriptor import FieldDescriptor
->>> from protobuf_to_dict import protobuf_to_dict, TYPE_CALLABLE_MAP
+>>> from protodict import to_dict, TYPE_CALLABLE_MAP
 >>>
 >>> type_callable_map = copy(TYPE_CALLABLE_MAP)
 >>> # convert TYPE_BYTES to a Python bytestring
 >>> type_callable_map[FieldDescriptor.TYPE_BYTES] = str
 >>>
 >>> # my_message is a google.protobuf.message.Message instance
->>> protobuf_to_dict(my_message, type_callable_map=type_callable_map)
+>>> to_dict(my_message, type_callable_map=type_callable_map)
 ```
 
 By default, the integer representation is used for enum values. To use their
-string labels instead, pass `use_enum_labels=True` into `protobuf_to_dict`:
+string labels instead, pass `use_enum_labels=True` into `to_dict`:
 
 ```python
->>> protobuf_to_dict(my_message, use_enum_labels=True)
+>>> to_dict(my_message, use_enum_labels=True)
 ```
 
 ## Unit testing
@@ -64,17 +67,17 @@ $ python setup.py nosetests
 To regenerate `src/tests/sample_pb2.py`:
 
 ```sh
-$ protoc --python_out=src -Isrc src/tests/sample.proto 
+$ protoc --python_out=src -Isrc src/tests/sample.proto
 ```
 
 ## Authors
 
-protobuf-to-dict is written and maintained by
+protodict is written and maintained by
 [Ben Hodgson](http://benhodgson.com/), with significant contributions from
 [Nino Walker](https://github.com/ninowalker),
 [Jonathan Klaassen](https://github.com/jaklaassen), and
 [Tristram Gräbener](http://blog.tristramg.eu/).
-
+[Eugene Van den Bulke](http://github.com/3kwa).
 
 ## (Un)license
 
