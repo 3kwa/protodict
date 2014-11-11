@@ -77,7 +77,9 @@ protodict is written and maintained by
 [Nino Walker](https://github.com/ninowalker),
 [Jonathan Klaassen](https://github.com/jaklaassen), and
 [Tristram Gräbener](http://blog.tristramg.eu/).
-[Eugene Van den Bulke](http://github.com/3kwa).
+[Eugene Van den Bulke](http://github.com/3kwa)'s small contribution started with
+a corner case bug fix and an ignored [PR](https://github.com/benhodgson/protobuf-to-dict/pull/5)
+which led to this fork.
 
 ## (Un)license
 

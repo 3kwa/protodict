@@ -4,9 +4,8 @@ import distutils.command.bdist_conda
 
 setup(
     name='protodict',
-    description='A teeny Python library for creating Python dicts from '
-        'protocol buffers and the reverse. Useful as an intermediate step '
-        'before serialisation (e.g. to JSON).',
+    description='a small Python library for 2 ways conversion between dicts '
+        'and protocol buffers.'
     version='1.0.0',
     author='Eugene Van den Bulke',
     author_email='eugene.vandenbulke@gmail.com',
