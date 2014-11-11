@@ -8,8 +8,8 @@ setup(
         'protocol buffers and the reverse. Useful as an intermediate step '
         'before serialisation (e.g. to JSON).',
     version='0.1.1',
-    author='Ben Hodgson',
-    author_email='ben@benhodgson.com',
+    author='Eugene Van den Bulke',
+    author_email='eugene.vandenbulke@gmail.com',
     url='https://github.com/3kwa/protodict',
     license='Public Domain',
     keywords=['protobuf', 'dict'],
