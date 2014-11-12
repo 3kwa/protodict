@@ -1,11 +1,10 @@
 from setuptools import setup
-import distutils.command.bdist_conda
 
 
 setup(
     name='protodict',
     description='a small Python library for 2 ways conversion between dicts '
-        'and protocol buffers.'
+        'and protocol buffers.',
     version='1.0.0',
     author='Eugene Van den Bulke',
     author_email='eugene.vandenbulke@gmail.com',
