@@ -56,7 +56,7 @@ def to_dict(pb, type_callable_map=TYPE_CALLABLE_MAP, use_enum_labels=False):
 
 
 def _get_field_value_adaptor(pb, field, type_callable_map=TYPE_CALLABLE_MAP, use_enum_labels=False):
-    if field.type == FieldDescriptor.TYPE_MESSAGE:
+    if field.type in (FieldDescriptor.TYPE_MESSAGE, FieldDescriptor.TYPE_GROUP):
         # recursively encode protobuf sub-message
         return lambda pb: to_dict(pb,
             type_callable_map=type_callable_map,
@@ -141,7 +141,7 @@ def _dict_to_protobuf(pb, value, type_callable_map, strict):
                 else:
                     pb_value.append(item)
             continue
-        if field.type == FieldDescriptor.TYPE_MESSAGE:
+        if field.type in (FieldDescriptor.TYPE_MESSAGE, FieldDescriptor.TYPE_GROUP):
             if input_value:
                 _dict_to_protobuf(pb_value, input_value, type_callable_map, strict)
             else:
