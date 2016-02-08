@@ -133,7 +133,7 @@ def _dict_to_protobuf(pb, value, type_callable_map, strict):
     for field, input_value, pb_value in fields:
         if field.label == FieldDescriptor.LABEL_REPEATED:
             for item in input_value:
-                if field.type == FieldDescriptor.TYPE_MESSAGE:
+                if field.type in (FieldDescriptor.TYPE_MESSAGE, FieldDescriptor.TYPE_GROUP):
                     m = pb_value.add()
                     _dict_to_protobuf(m, item, type_callable_map, strict)
                 elif field.type == FieldDescriptor.TYPE_ENUM and isinstance(item, basestring):
