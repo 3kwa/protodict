@@ -10,12 +10,10 @@ EXTENSION_CONTAINER = '___X'
 
 if six.PY2:
     _long = long
-    _bytes = lambda b: b.encode("base64")
 else:
     import base64
 
     _long = int
-    _bytes = lambda b: base64.b64encode(b)
 
 
 TYPE_CALLABLE_MAP = {
@@ -33,7 +31,7 @@ TYPE_CALLABLE_MAP = {
     FieldDescriptor.TYPE_SFIXED64: _long,
     FieldDescriptor.TYPE_BOOL: bool,
     FieldDescriptor.TYPE_STRING: six.text_type,
-    FieldDescriptor.TYPE_BYTES: _bytes,
+    FieldDescriptor.TYPE_BYTES: (lambda b: b.encode("base64")) if six.PY2 else base64.b64encode,
     FieldDescriptor.TYPE_ENUM: int,
 }
 
