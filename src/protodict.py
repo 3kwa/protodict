@@ -1,3 +1,4 @@
+import six
 from google.protobuf.message import Message
 from google.protobuf.descriptor import FieldDescriptor
 
@@ -7,23 +8,30 @@ __all__ = ["to_dict", "TYPE_CALLABLE_MAP", "to_protobuf", "REVERSE_TYPE_CALLABLE
 
 EXTENSION_CONTAINER = '___X'
 
+if six.PY2:
+    _long = long
+else:
+    import base64
+
+    _long = int
+
 
 TYPE_CALLABLE_MAP = {
     FieldDescriptor.TYPE_DOUBLE: float,
     FieldDescriptor.TYPE_FLOAT: float,
     FieldDescriptor.TYPE_INT32: int,
-    FieldDescriptor.TYPE_INT64: long,
+    FieldDescriptor.TYPE_INT64: _long,
     FieldDescriptor.TYPE_UINT32: int,
-    FieldDescriptor.TYPE_UINT64: long,
+    FieldDescriptor.TYPE_UINT64: _long,
     FieldDescriptor.TYPE_SINT32: int,
-    FieldDescriptor.TYPE_SINT64: long,
+    FieldDescriptor.TYPE_SINT64: _long,
     FieldDescriptor.TYPE_FIXED32: int,
-    FieldDescriptor.TYPE_FIXED64: long,
+    FieldDescriptor.TYPE_FIXED64: _long,
     FieldDescriptor.TYPE_SFIXED32: int,
-    FieldDescriptor.TYPE_SFIXED64: long,
+    FieldDescriptor.TYPE_SFIXED64: _long,
     FieldDescriptor.TYPE_BOOL: bool,
-    FieldDescriptor.TYPE_STRING: unicode,
-    FieldDescriptor.TYPE_BYTES: lambda b: b.encode("base64"),
+    FieldDescriptor.TYPE_STRING: six.text_type,
+    FieldDescriptor.TYPE_BYTES: (lambda b: b.encode("base64")) if six.PY2 else base64.b64encode,
     FieldDescriptor.TYPE_ENUM: int,
 }
 
@@ -73,7 +81,7 @@ def _get_field_value_adaptor(pb, field, type_callable_map=TYPE_CALLABLE_MAP, use
 
 
 def get_bytes(value):
-    return value.decode('base64')
+    return value.decode('base64') if six.PY2 else base64.b64decode(value)
 
 
 REVERSE_TYPE_CALLABLE_MAP = {
@@ -136,7 +144,7 @@ def _dict_to_protobuf(pb, value, type_callable_map, strict):
                 if field.type in (FieldDescriptor.TYPE_MESSAGE, FieldDescriptor.TYPE_GROUP):
                     m = pb_value.add()
                     _dict_to_protobuf(m, item, type_callable_map, strict)
-                elif field.type == FieldDescriptor.TYPE_ENUM and isinstance(item, basestring):
+                elif field.type == FieldDescriptor.TYPE_ENUM and isinstance(item, six.string_types):
                     pb_value.append(_string_to_enum(field, item))
                 else:
                     pb_value.append(item)
@@ -156,7 +164,7 @@ def _dict_to_protobuf(pb, value, type_callable_map, strict):
             pb.Extensions[field] = input_value
             continue
 
-        if field.type == FieldDescriptor.TYPE_ENUM and isinstance(input_value, basestring):
+        if field.type == FieldDescriptor.TYPE_ENUM and isinstance(input_value, six.string_types):
             input_value = _string_to_enum(field, input_value)
 
         setattr(pb, field.name, input_value)
